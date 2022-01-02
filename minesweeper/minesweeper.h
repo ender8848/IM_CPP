@@ -50,10 +50,11 @@ int uncovered_num_around(char const * const  position, char const revealed[][LEN
 
 
 /* determines if a risk-free move is available in current playing board revealed.
-* 
-* 
-* 
+* @param revealed, 9X9 player board
+* @move, output string containing a safe move 
+* @return, true if a safe move can be found and false otherwise
 */
 bool find_safe_move(char const revealed[][LEN], char * move);
 
 
+/* professor Will's solution */

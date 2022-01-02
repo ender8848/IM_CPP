@@ -119,7 +119,7 @@ int main() {
   }
   cout << endl;
 
-  /*  
+  
   cout << "=================== Bonus Question =====================" << endl << endl;
 
   load_board("bonus.dat", mines);
@@ -130,6 +130,6 @@ int main() {
 
   cout << "The set of risky moves required to solve the bonus board is:" << endl;
   cout << moves << endl;
-  */
+  
   return 0;
 }

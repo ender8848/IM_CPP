@@ -182,58 +182,49 @@ int uncovered_num_around(char const * const  position, char const revealed[][LEN
 
 // not yet completed
 bool find_safe_move(char const revealed[][LEN], char * move) {
-    int num;
     int move_pos = 0;
     move[0] = '\0';
-    char pos[4];
-    pos[2] = '*';
-    pos[3] = '\0';
-    for (int i = 0; i < LEN; ++i) {
-        for (int j = 0; j < LEN; ++j) {
-            num = static_cast<int>(revealed[i][j] - '0');
-            if (num && 
-                revealed[i][j] !='*' && 
-                revealed[i][j] !='?' && 
-                revealed[i][j] !=' ' ) {
-                pos[0] = i + 'A';
-                pos[1] = j + '1';
-                if (revealed[i][j] - '0'  == flag_num_around(pos, revealed)
-                    ) {
-                    for (int i = -1; i <= 1; ++i) {
-                        for (int j = -1; j <= 1; ++j) {
-                            if (pos[0] + i >= 0 && pos[0] + i < LEN &&
-                                pos[1] + j >= 0 && pos[1] + j < LEN &&
-                                (i || j) && 
-                                revealed[pos[0] + i][pos[1] + j] == '?') {
-                                    move[move_pos++] = pos[0] + i + 'A';
-                                    move[move_pos++] = pos[1] + j + '1';
+    char pos[3]; 
+    pos[2] = '\0';
+    // 
+    for (int row = 0; row < LEN; ++row) {
+        for (int col = 0; col < LEN; ++col) {
+            // for all cell around a position
+            for (int i = -1; i <= 1; ++i) {
+                for (int j = -1; j <= 1; ++j) {
+                    if (row + i >= 0 && row + i < LEN &&
+                        col + j >= 0 && col + j < LEN &&
+                        (i || j)) {
+
+                        pos[0] = 'A' + row + i;
+                        pos[1] = '1' + col + j;
+                        // make sure uncovered
+                        if (revealed[row][col] == '?') {
+                            // safe uncover
+                            if (revealed[row+i][col+j] >= '1' && 
+                                revealed[row+i][col+j] <= '8' && 
+                                flag_num_around(pos, revealed) == revealed[row+i][col+j]-'0') {
+                                    move[move_pos++] = row + 'A';
+                                    move[move_pos++] = col + '1';
                                     move[move_pos] = '\0';
                                     return true;
-                                }
-                        }
-                    }
-                }
-                if (revealed[i][j] - '0'  - flag_num_around(pos, revealed)
-                    == uncovered_num_around(pos, revealed)) {
-                        for (int i = -1; i <= 1; ++i) {
-                        for (int j = -1; j <= 1; ++j) {
-                            if (pos[0] + i >= 0 && pos[0] + i < LEN &&
-                                pos[1] + j >= 0 && pos[1] + j < LEN &&
-                                (i || j) && 
-                                revealed[pos[0] + i][pos[1] + j] == '?') {
-                                    move[move_pos++] = pos[0] + i + 'A';
-                                    move[move_pos++] = pos[1] + j + '1';
+                            }
+                            // safe flag
+                            if (revealed[row+i][col+j] >= '1' && 
+                                revealed[row+i][col+j] <= '8' && 
+                                flag_num_around(pos, revealed) +1 == revealed[row+i][col+j]-'0') {
+                                    move[move_pos++] = row + 'A';
+                                    move[move_pos++] = col + '1';
                                     move[move_pos++] = '*';
                                     move[move_pos] = '\0';
                                     return true;
-                                }
+                            }
                         }
                     }
-                        
                 }
-                
             }
         }
     }
     return false;
 }
+

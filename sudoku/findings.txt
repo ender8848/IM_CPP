@@ -1,0 +1,12 @@
+Summarise your findings here (see specification).
+
+
+--------Short answer--------: 
+
+sudoku     hardness
+mystery1   extremely hard
+mystery2   impossible
+mystery3   hard
+
+--------Long answer--------: 
+In terms of consumed time and recursions, mystery1 > mystery3. Mystery2 does not have a solution even if all possibilities have been tried; 
