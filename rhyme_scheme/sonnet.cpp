@@ -141,6 +141,7 @@ bool find_phonetic_ending(std::string const& word,
   }
 
   getline(input, st, '\n');
+  // find barkwards, when seeing first vowel, add letters forwards
   for (auto it = st.end(); it != st.begin(); --it) {
     if (is_vowel(*it)) {
       while (it != st.end()) {
@@ -180,6 +181,7 @@ bool find_rhyme_scheme(string const& filename, char * const scheme) {
   string st;
   while (getline(input, st, '\n')) {
     get_word(st.c_str(), count_words(st), word);
+    // word here is safe to be used as both input and output string
     if (find_phonetic_ending(word, word)) {
       scheme[pos++] = rhyming_letter(word);
     }
