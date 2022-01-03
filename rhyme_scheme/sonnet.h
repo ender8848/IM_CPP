@@ -1,4 +1,6 @@
+/* finished in 1/3/2022 again using 90min*/
 #pragma once
+#include <string>
 
 // RESET is a constant used by function rhyming_letter(...)
 #define RESET NULL
@@ -21,16 +23,16 @@ bool get_word(const char *input_line, int number, char *output_word);
 
 char rhyming_letter(const char *ending);
 
-/* returns the number of words in a given input string line */
-int count_words(char const* input_line);
+int count_words(std::string const& words);
 
-/* get in a word and try to store its phonetic_ending 
-   in phonetic_ending, return true if success, false if failed */
-bool find_phonetic_ending(char const* word, char* phonetic_ending);
+bool is_punct(char ch);
 
+bool find_phonetic_ending(std::string const& word, 
+                          char * const phonetic_ending);
 
-bool find_rhyme_scheme(char const* filename, char* scheme);
+bool is_vowel(char const ch);
 
-int upWordLen(char const* str);
+bool find_rhyme_scheme(string const& filename, char * const scheme);
 
-std::string identify_sonnet(char const* filename);
+std::string identify_sonnet(std::string const& filename);
+

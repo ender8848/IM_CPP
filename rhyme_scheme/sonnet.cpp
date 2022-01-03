@@ -5,6 +5,8 @@
 #include <map>
 #include <string>
 #include <fstream>
+#include <cctype>
+#include <algorithm>
 
 using namespace std;
 
@@ -92,128 +94,111 @@ char rhyming_letter(const char *ending) {
 
 /* START WRITING YOUR FUNCTION BODIES HERE */
 
-int count_words(char const* input_line) {
-  int count = 0; 
-  // wordHead is true when not inside a word
-  bool wordHead = true;
-  int i = 0;
-
-  while (input_line[i] != '\0') {
-    if (input_line[i] != ' ' && wordHead) {
-      ++count;
-      wordHead = false;
+int count_words(string const& words) {
+  string word = "";
+  int count = 0;
+  for (auto it = words.begin(); it != words.end(); ++it) {
+    if (is_punct(*it)) {
+      if (word.length() > 0) {++count;}
+      word = "";
     }
-    if (input_line[i] == ' ') {wordHead = true;}
-    ++i;
+    else {word.push_back(*it);}
   }
-
+  // most sentence does not end with a space, need this line to count last word
+  if (word.length() > 0) {++count;}
   return count;
 }
 
+bool is_punct(char ch) {
+  switch(ch) {
+    case ' ': return true;
+    case ',': return true;
+    case '.': return true;
+    case '?': return true;
+    case '!': return true;
+    case ';': return true;
+    case ':': return true;
+    case '"': return true;
+    case '-': return true;
+    default : break;
+  }
+  return false;
+}
 
-bool find_phonetic_ending(char const* word, char* phonetic_ending) {
-  size_t temp = strlen(phonetic_ending);
-  for (size_t i = 0; i < temp; ++i) {
-    phonetic_ending[i] = '\0';
+
+bool find_phonetic_ending(std::string const& word, 
+                          char * const phonetic_ending) {
+  string st;
+  int pos = 0;
+  ifstream input("dictionary.txt");
+  while (input >> st) {
+    if (st == word) {break;}
   }
-  std::ifstream input;
-  std::string line;
-  input.open("dictionary.txt");
-  while (input.good()) {
-    std::getline(input, line);
-    if (line.find(word) != string::npos && line[strlen(word)] == ' ') {
-      break;
-    }
-  }
-  if (!input.good()) {
-    input.close(); 
+
+  if (input.eof()) {
+    input.close();
     return false;
   }
 
-  for (int i = line.length() - 1; i > 0 ; --i) {
-    if (line[i] == 'A' || line[i] == 'E'
-     || line[i] == 'I' || line[i] == 'O'
-     || line[i] == 'U') {
-      int j = 0;
-      while (line[i] != '\0') {
-        if (line[i] != ' ') {phonetic_ending[j] = line[i]; ++j;}
-        ++i; 
+  getline(input, st, '\n');
+  for (auto it = st.end(); it != st.begin(); --it) {
+    if (is_vowel(*it)) {
+      while (it != st.end()) {
+        if (isupper(*it)) {
+          phonetic_ending[pos++] = *it;
+        }
+        ++it;
       }
+      phonetic_ending[pos] = '\0';
       break;
     }
   }
+  input.close();
   return true;
 }
 
 
-/* not yet completed */
-bool find_rhyme_scheme(char const* filename, char* scheme) {
-  size_t temp = strlen(scheme);
-  for (size_t i = 0; i < temp; ++i) {
-    scheme[i] = '\0';
+bool is_vowel(char const ch) {
+  switch(ch) {
+    case 'A': return true;
+    case 'E': return true;
+    case 'I': return true;
+    case 'O': return true;
+    case 'U': return true;
+    default : break;
   }
-  rhyming_letter(RESET);
-  std::ifstream input(filename);
+  return false;
+}
+
+
+bool find_rhyme_scheme(string const& filename, char * const scheme) {
+  ifstream input(filename);
   if (input.fail()) {return false;}
-  std::string line;
-  int j = 0;
-
-  while (input.good()) {
-    std::getline(input, line);
-    char word[30] = {};
-    char end[30]  = {};
-
-    // find last word and get its rhyme
-    for (int i = line.length() - 1; i > 0 ; --i) {
-      if (line[i] == ' ' && line[i+1] != '\0') {
-        ++i;
-        int k = 0;
-        while (line[i] != '\0') {
-          if (line[i] >= 'a' && line[i] <= 'z') {
-            word[k++] = line[i] + 'A' - 'a';
-          }
-          if (line[i] >= 'A' && line[i] <= 'Z') {
-            word[k++] = line[i];
-          }
-          ++i;
-        }
-        break;
-      }
+  rhyming_letter(RESET);
+  char word[50];
+  int pos = 0;
+  string st;
+  while (getline(input, st, '\n')) {
+    get_word(st.c_str(), count_words(st), word);
+    if (find_phonetic_ending(word, word)) {
+      scheme[pos++] = rhyming_letter(word);
     }
-
-    if (find_phonetic_ending(word, end)) {
-      // std::cout << word << std::endl;
-      scheme[j++] = rhyming_letter(end);
-    }
+    else {return false;}
   }
+  scheme[pos] = '\0';
   return true;
 }
 
-int upWordLen(char const* str) {
-  int count = 0;
-  int i = 0;
-  while (str[i] != '\0') {
-    if (str[i] >= 'A' && str[i] <= 'Z') {
-      ++count;
-    }
-  ++i;
-  }
 
-  return count;
-}
-
-
-std::string identify_sonnet(char const* filename) {
-  char scheme[14] = {};
-  find_rhyme_scheme(filename, scheme);
-  if (strcmp(scheme, "ababcdcdefefgg") == 0) {
-    return "Shakespearean";
+string identify_sonnet(string const& filename) {
+  char scheme[512];
+  scheme[0] = '\0';
+  if (!find_rhyme_scheme(filename, scheme)) {
+    return "";
   }
-  if (strcmp(scheme, "abbaabbacdcdcd") == 0) {
-    return "Petrarchan";
-  }
-  if (strcmp(scheme, "ababbcbccdcdee") == 0) {
-    return "Spenserian";
-  }
+  if (!strcmp(scheme, "ababcdcdefefgg")) {return "shakespeare";}
+  if (!strcmp(scheme, "abbaabbacdcdcd")) {return "petrarch";}
+  if (!strcmp(scheme, "ababbcbccdcdee")) {return "spenser";}
   return "Unknown";
 }
+

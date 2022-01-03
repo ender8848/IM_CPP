@@ -41,6 +41,8 @@ int main() {
   cout << count_words("") << " words" << endl;
   cout << "The line \"Shall I compare thee to a Summer's day?\" contains ";
   cout << count_words("Shall I compare thee to a Summer's day?") << " words" << endl;
+  cout << "The line \"Sometime too hot the eye of heaven shines,\" contains ";
+  cout << count_words("Sometime too hot the eye of heaven shines,") << " words" << endl;
 
   cout << endl;
 
