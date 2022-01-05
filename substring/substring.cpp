@@ -26,13 +26,10 @@ int substring_position(char const * const sub, char const * const st) {
     if (strlen2(st) < strlen2(sub)) {return -1;}
 
     if (is_prefix(sub, st)) {return 0;}
-    else if (strlen2(st) > strlen2(sub)) {return 1 + gReturn(substring_position(sub, st + 1));}
+    else if (strlen2(st) > strlen2(sub)) {
+        return substring_position(sub, st+1) == -1 ? -1 : 1 + substring_position(sub, st + 1);
+    }
     else {return -2;} 
-}
-
-
-int gReturn(int num) {
-    return num < 0 ? -2 : num;
 }
 
 /* below is challenge for fun */
