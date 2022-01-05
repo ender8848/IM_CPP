@@ -32,6 +32,7 @@ int substring_position(char const * const sub, char const * const st) {
     else {return -2;} 
 }
 
+
 /* below is challenge for fun */
 int substring_position2(char const * const m, char const * const s) {
     return m?(strstr(s,m)?strstr(s,m)-s:-1):0;
