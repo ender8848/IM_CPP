@@ -1,3 +1,5 @@
+/* finished in 1/8/2022 in 82min */
+
 #include <string>
 
 enum ScoreModifier { NONE, DOUBLE_LETTER_SCORE, TRIPLE_LETTER_SCORE, DOUBLE_WORD_SCORE, TRIPLE_WORD_SCORE };
