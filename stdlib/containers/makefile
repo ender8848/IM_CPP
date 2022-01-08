@@ -1,7 +1,11 @@
 array: array.cpp 
 	g++ array.cpp -o array
 
-
+deque: deque.cpp 
+	g++ deque.cpp -o deque
 
 clean: 
-	rm array
+	rm -rf array deque
+
+
+

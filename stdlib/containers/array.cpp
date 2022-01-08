@@ -21,8 +21,6 @@ int main() {
     cout << "use strlen to check if a \\0 is automatically added: " << strlen(chs.data()) << endl;
     cout << ".size() is a more elegant way to get size: " << chs.size() << endl;
     cout << ".empty() checks if empty: " << chs.empty() << endl;
-    cout << ".max_size() return max possible size: " << chs.max_size() << endl;
-    
 
     return 0;
 }
