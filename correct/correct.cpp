@@ -33,8 +33,6 @@ char binary_to_ascii(char *binary) {
 }
 
 /* now add your own functions here */
-
-
 void text_to_binary(char const * const str, char * const binary) {
     // no need to add '\0' coz ascii_to_binary does that work
     if (*str == '\0') {return;}
@@ -78,7 +76,7 @@ int decode(char const * const received, char * const decoded) {
         *decoded = '\0';
         return 0;
     }
-    // r_copy stands for received copy
+    // r_copy stands for received copy, only copy 8 length 
     char r_copy[CORRECTLEN + 1];
     strncpy(r_copy, received, CORRECTLEN);
     // not sure how to avoid magic numbers here
