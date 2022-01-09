@@ -12,7 +12,10 @@ using namespace std;
  * compare 2 strings regardless of punctuations and case 
  * return 1 if similar, 0 if not
  */
-int compare(char const * one, char const * two);
+int compare_whatever(char const * one, char const * two);
+
+/* compare if 2 string is the same recursively */
+int compare(char const * sd1, char const * sd2);
 
 /**
  * helper func for Q2 in playfair
@@ -32,14 +35,24 @@ int count_words(char const * words);
 
 
 int main() {
-    cout << "======== test for compare func ========" << endl;
+    cout << "======== test for compare_whatever func ========" << endl;
     cout << "The strings 'this, and THAT......' and 'THIS and THAT!!!' are ";
-    if (!compare("this, and THAT......", "THIS and THAT!!!")) {cout << "NOT ";}
+    if (!compare_whatever("this, and THAT......", "THIS and THAT!!!")) {cout << "NOT ";}
     cout << "the same" << endl << "  (ignoring punctuation and case)" << endl;
 
     cout << "The strings 'this, and THAT' and 'THIS, but not that' are ";
-    if (!compare("this, and THAT", "THIS, but not that")) {cout << "NOT ";}
+    if (!compare_whatever("this, and THAT", "THIS, but not that")) {cout << "NOT ";}
     cout << "the same" << endl << "  (ignoring punctuation and case)" << endl << endl;
+
+
+    cout << "======== test for compare func ========" << endl;
+    cout << "The soundex codes S250 and S255 are ";
+    if (!compare("S250", "S255")) {cout << "not ";}
+    cout << "equal" << endl;
+
+    cout << "The soundex codes W252 and W252 are ";
+    if (!compare("W252", "W252")) {cout << "not ";}
+    cout << "equal" << endl;
 
 
     cout << "======== test for occurs_before func ========" << endl;
@@ -84,7 +97,7 @@ int main() {
 }
 
 
-int compare(char const * one, char const * two) {
+int compare_whatever(char const * one, char const * two) {
     // go to the position of first char
     while (!isalpha(*one) && *one) {++one;}
     while (!isalpha(*two) && *two) {++two;}
@@ -95,6 +108,15 @@ int compare(char const * one, char const * two) {
     }
     else {
         return 0;
+    }
+}
+
+
+int compare(char const * sd1, char const * sd2) {
+    if (strlen(sd1) == 0 && strlen(sd2) == 0) {return 1;}
+    else {
+        if (*sd1 != *sd2) {return 0;}
+        else {return compare(sd1 + 1, sd2 + 1);}
     }
 }
 
