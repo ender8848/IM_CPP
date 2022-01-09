@@ -97,7 +97,21 @@ void print_maze(char **m, int height, int width) {
 
 
 /* student functions */
-bool find_marker(char ch, char ** maze, int height, int width, int& row, int& column) {
+/** finds the coordinates of marker char in a maze
+ * @param ch char to be found
+ * @param maze 2-d maze char array
+ * @param height height of maze
+ * @param width width of maze
+ * @param row output row of char
+ * @param column output column of char
+ * @return true if found, false otherwise
+ */
+bool find_marker(char ch, 
+                 char ** maze, 
+                 int height, 
+                 int width, 
+                 int& row, 
+                 int& column) {
   row = -1; column = -1;
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
@@ -112,7 +126,12 @@ bool find_marker(char ch, char ** maze, int height, int width, int& row, int& co
 }
 
 
-bool valid_move(char type, char** maze, int height, int width, int& row, int& col) {
+bool valid_move(char type, 
+                char** maze, 
+                int height, 
+                int width, 
+                int& row, 
+                int& col) {
   // valid move type check
   switch(type) {
     case 'N': --row; break;
@@ -125,7 +144,7 @@ bool valid_move(char type, char** maze, int height, int width, int& row, int& co
   if (row < 0 || row >= height || col < 0 || col >= width) {
     return false;
   }
-  // barrier check, defend all characters except space and X
+  // barrier check, defend all characters except space, X and M
   switch(maze[row][col]) {
     case ' ': break;
     case 'X': break;
@@ -136,7 +155,10 @@ bool valid_move(char type, char** maze, int height, int width, int& row, int& co
 }
 
 
-bool valid_solution(char const * const path, char ** maze, int height, int width) {
+bool valid_solution(char const * const path, 
+                    char ** maze, 
+                    int height, 
+                    int width) {
   int row = -1, col = -1;
   if (strlen(path) == 0) {return false;}
   if (!find_marker('>', maze, height, width, row, col)) {return false;}
@@ -177,19 +199,20 @@ bool find_path_(char** maze, int height, int width, int row, int col, char end) 
   if (is_dead(maze, height, width, row, col, end)) {return false;}
 
   maze[row][col] = MASK;
-  // try north
+  // Try all 4 directions 
+  // 1. try north
   if (valid_move('N', maze, height, width, row, col) && 
       find_path_(maze, height, width, row, col, end)) {return true;}
   else {++row;}
-  // try south
+  // 2. try south
   if (valid_move('S', maze, height, width, row, col) && 
       find_path_(maze, height, width, row, col, end)) {return true;}
   else {--row;}
-  // try east
+  // 3. try east
   if (valid_move('E', maze, height, width, row, col) && 
       find_path_(maze, height, width, row, col, end)) {return true;}
   else {--col;}
-  // try west
+  // 4. try west
   if (valid_move('W', maze, height, width, row, col) && 
       find_path_(maze, height, width, row, col, end)) {return true;}
   else {++col;}
@@ -199,7 +222,12 @@ bool find_path_(char** maze, int height, int width, int row, int col, char end) 
 }
 
 
-void generate_path(char** maze, std::string& path, int height, int width, int row, int col) {
+void generate_path(char** maze, 
+                   std::string& path, 
+                   int height, 
+                   int width, 
+                   int row, 
+                   int col) {
   // check if 3x3 block has MASK
   for (int i = -1; i <= 1; ++i) {
     for (int j = -1; j <= 1; ++j) {

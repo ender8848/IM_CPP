@@ -19,9 +19,8 @@ void print_maze(char **m, int height, int width);
 
 /* student functions */
 
-/* Q1 */
 /**
- * loop over a maze and find a marker's position
+ * Q1 loop over a maze and find a marker's position
  * @param ch the character to be find
  * @param maze 2-D char array representing a maze 
  * @param height the height of a maze
@@ -30,9 +29,12 @@ void print_maze(char **m, int height, int width);
  * @param column column of the char, if not found, set as -1
  * @return true if ch can be found, false otherwise
  */ 
-bool find_marker(char ch, char ** maze, int height, int width, int& row, int& column);
-
-/* Q2 */
+bool find_marker(char ch, 
+                 char ** maze, 
+                 int height, 
+                 int width, 
+                 int& row, 
+                 int& column);
 
 /**
  * helper func for Q2
@@ -45,19 +47,26 @@ bool find_marker(char ch, char ** maze, int height, int width, int& row, int& co
  * @param col column of the char
  * @return true if a move is valid, false otherwise
  */
-bool valid_move(char type, char** maze, int height, int width, int& row, int& col);
+bool valid_move(char type, 
+                char** maze, 
+                int height, 
+                int width, 
+                int& row, 
+                int& col);
 
 /**
- * check if a solution to a maze is valid using check_move func
+ * Q2 check if a solution to a maze is valid using check_move func
  * @param path a string of maze solution
  * @param maze 2-D char array representing a maze 
  * @param height the height of a maze
  * @param width the width of a maze
  * @return true if a solution is valid, false otherwise
  */
-bool valid_solution(char const * const path, char ** maze, int height, int width);
+bool valid_solution(char const * const path, 
+                    char ** maze, 
+                    int height, 
+                    int width);
 
-/* Q3 */
 /**
  * helper func for Q3, check if a position is dead end
  * @param maze 2-D char array representing a maze 
@@ -91,7 +100,12 @@ bool find_path_(char** maze, int height, int width, int row, int col, char end);
  * @param row row of the char
  * @param col column of the char
  */
-void generate_path(char** maze, std::string& path, int height, int width, int row, int col);
+void generate_path(char** maze, 
+                   std::string& path, 
+                   int height, 
+                   int width, 
+                   int row, 
+                   int col);
 
 /**
  * Q3, use the helper funcs to generate solution string
