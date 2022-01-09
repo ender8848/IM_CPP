@@ -50,7 +50,6 @@ int compare(char const * sd1, char const * sd2) {
 
 
 int count(char const * surname, char const * sentence) {
-    bool insideWord = false;
     int count = 0;
     char sd1[5], sd2[5];
     std::string word = "";
