@@ -66,8 +66,6 @@ void initialise_board(char board[9][9]) {
 }
 
 /* add your functions here */
-
-
 bool is_complete(char const mines[][LEN], char const revealed[][LEN]) {
     for (int i = 0; i < LEN; ++i) {
         for (int j = 0; j < LEN; ++j) {
@@ -129,16 +127,25 @@ MoveResult make_move(char const * const  position, char const mines[][LEN], char
         revealed[position[0] - 'A'][position[1] - '1'] = count_mines(position, mines) + '0';
     }
     else {
+        // if there is no mine around, do make_move to 4 directions recursively
         revealed[position[0] - 'A'][position[1] - '1'] = ' ';
         char new_pos[strlen(position) + 1];
         strcpy(new_pos, position);
+        ++new_pos[0];
+        if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
         ++new_pos[1];
         if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
-        --new_pos[1];--new_pos[0];
+        --new_pos[0];
         if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
-        ++new_pos[0];--new_pos[1]; 
+        --new_pos[0];
         if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
-        ++new_pos[1];++new_pos[0];
+        --new_pos[1];
+        if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
+        --new_pos[1];
+        if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
+        ++new_pos[0];
+        if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
+        ++new_pos[0];
         if (revealed[position[0] - 'A'][position[1] - '1'] != '?') {make_move(new_pos, mines, revealed);}
     }
     if (is_complete(mines, revealed)) {return SOLVED_BOARD;}
@@ -180,44 +187,50 @@ int uncovered_num_around(char const * const  position, char const revealed[][LEN
 }
 
 
-// not yet completed
+
 bool find_safe_move(char const revealed[][LEN], char * move) {
     int move_pos = 0;
     move[0] = '\0';
     char pos[3]; 
     pos[2] = '\0';
-    // 
+
     for (int row = 0; row < LEN; ++row) {
         for (int col = 0; col < LEN; ++col) {
             // for all cell around a position
+            // firstly check its surrounding 3x3 blocks
             for (int i = -1; i <= 1; ++i) {
                 for (int j = -1; j <= 1; ++j) {
                     if (row + i >= 0 && row + i < LEN &&
                         col + j >= 0 && col + j < LEN &&
                         (i || j)) {
-
                         pos[0] = 'A' + row + i;
                         pos[1] = '1' + col + j;
                         // make sure uncovered
                         if (revealed[row][col] == '?') {
                             // safe uncover
+                            // if (revealed[row+i][col+j] == ' ') {
+                            //     move[move_pos++] = row + 'A';
+                            //     move[move_pos++] = col + '1';
+                            //     move[move_pos] = '\0';
+                            // }
+                            // safe uncover
                             if (revealed[row+i][col+j] >= '1' && 
                                 revealed[row+i][col+j] <= '8' && 
                                 flag_num_around(pos, revealed) == revealed[row+i][col+j]-'0') {
-                                    move[move_pos++] = row + 'A';
-                                    move[move_pos++] = col + '1';
-                                    move[move_pos] = '\0';
-                                    return true;
+                                move[move_pos++] = row + 'A';
+                                move[move_pos++] = col + '1';
+                                move[move_pos] = '\0';
+                                return true;
                             }
                             // safe flag
                             if (revealed[row+i][col+j] >= '1' && 
                                 revealed[row+i][col+j] <= '8' && 
-                                flag_num_around(pos, revealed) +1 == revealed[row+i][col+j]-'0') {
-                                    move[move_pos++] = row + 'A';
-                                    move[move_pos++] = col + '1';
-                                    move[move_pos++] = '*';
-                                    move[move_pos] = '\0';
-                                    return true;
+                                uncovered_num_around(pos, revealed) + flag_num_around(pos, revealed) == revealed[row+i][col+j] - '0') {
+                                move[move_pos++] = row + 'A';
+                                move[move_pos++] = col + '1';
+                                move[move_pos++] = '*';
+                                move[move_pos] = '\0';
+                                return true;
                             }
                         }
                     }
@@ -228,3 +241,34 @@ bool find_safe_move(char const revealed[][LEN], char * move) {
     return false;
 }
 
+
+void solve_board(char const mines[][LEN], 
+                 char revealed[][LEN], 
+                 char* moves) {
+    
+    int pos = 6;
+    strcpy(moves, "F1 ");
+    make_move("F1", mines, revealed);
+    strcpy(moves+3, "F9 ");
+    make_move("F9", mines, revealed);
+    char moves_[512];
+    display_board(revealed);
+    while (find_safe_move(revealed, moves_)) {
+        // cout << moves_ << endl;
+        make_move(moves_, mines, revealed);
+        // display_board(revealed);
+    }
+    if(is_complete(mines, revealed)) {return;}
+    else {
+        for (int i = 0; i < LEN; ++i) {
+            for (int j = 0; j < LEN; ++j) {
+                if (revealed[i][j] == '?') {
+                    moves[pos++] = i + 'A';
+                    moves[pos++] = j + '1';
+                    moves[pos++] = ' ';
+                    moves[pos] = '\0';
+                }
+            }
+        }
+    }
+}
