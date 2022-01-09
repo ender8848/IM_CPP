@@ -1,7 +1,7 @@
 CC = g++ -g -Wall
 
-main: words.o main.o
-	$(CC) words.o main.o -o main
+words: words.o main.o
+	$(CC) words.o main.o -o words
 
 main.o: main.cpp 
 	$(CC) -c main.cpp 
@@ -13,4 +13,4 @@ tidy:
 	rm *.o
 
 clean: 
-	rm main *.o
+	rm words *.o
