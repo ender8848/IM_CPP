@@ -144,7 +144,9 @@ void delete_words(char **words) {
 
 
 bool get_position(char** board, 
-                  char const ch, int& row, int& column) {
+                  char const ch, 
+                  int& row, 
+                  int& column) {
   row = -1;column = -1;
   for (int i = 0; i < WIDTH; ++i) {
     for (int j = 0; j < HEIGHT; ++j) {
@@ -195,7 +197,6 @@ void update(char** board, char const ch, Mask& mask) {
     mask[pos[0]][pos[1]] = true;
     return;
   }
-  
   // if ch not in board, flip all cell 
   // unless there is only one masked cell (1 true)
   if (mask.count() == 1) {
@@ -227,7 +228,7 @@ bool solve_board(char ** board, char ** words) {
   for (int i = 0; i < NUM; ++i) {update(board, i + 'A', mask[i]);}
   // use all words
   for (size_t c_word = 0; words[c_word] != NULL; ++c_word) {
-    // for consecutive 2 characters of each word
+    // intersect for consecutive 2 characters of each word
     for (size_t pos = 0; pos < strlen(words[c_word])-1; ++pos) {
       m_idx[0] = words[c_word][pos] - 'A';
       m_idx[1] = words[c_word][pos+1] - 'A';
@@ -254,8 +255,8 @@ bool solve_board(char ** board, char ** words) {
   // guess one position row by row, col by col, starting from A
   for (int i = 0; i < NUM; ++i) {
     if (has_char(board, i +'A' )) {continue;}
-    for (int row = 0; row < WIDTH; ++row) {
-      for (int col = 0; col < HEIGHT; ++col) {
+    for (int row = 0; row < HEIGHT; ++row) {
+      for (int col = 0; col < WIDTH; ++col) {
         if (mask[i].count() > 1 && mask[i][row][col]) {
           board[row][col] = i + 'A';
           if (!solve_board(board, words)) {board[row][col] = '.';}
@@ -273,8 +274,8 @@ bool solve_board(char ** board, char ** words) {
 
 
 bool has_char(char ** board, char ch) {
-  for (int i = 0; i < WIDTH; ++i) {
-    for (int j = 0; j < HEIGHT; ++j) {
+  for (int i = 0; i < HEIGHT; ++i) {
+    for (int j = 0; j < WIDTH; ++j) {
       if (board[i][j] == ch) {return true;}
     }
   }
