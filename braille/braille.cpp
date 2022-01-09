@@ -74,7 +74,8 @@ void encode(char const * ch, char * braille) {
 
 void print_braille(char const * ch, std::ostream& os) {
     int len = 2;
-    int pos[len] = {0,3};
+    int pos[len];
+    pos[0] = 0; pos[1] = 3;
     print_certain_pos(ch, os, pos, len);
     os << '\n';
     pos[0] = 1; pos[1] = 4;
@@ -86,7 +87,10 @@ void print_braille(char const * ch, std::ostream& os) {
 }
 
 
-void print_certain_pos(char const * ch, std::ostream& os, int const * const pos, int const len) {
+void print_certain_pos(char const * ch, 
+                       std::ostream& os, 
+                       int const * const pos, 
+                       int const len) {
     if (*ch == '\0') {return;}
     char braille[2 * UNITLEN + 1];
     if (encode_character(*ch, braille) == UNITLEN) {

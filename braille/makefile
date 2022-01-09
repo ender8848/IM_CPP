@@ -1,7 +1,7 @@
 CC = g++ -g -Wall
 
 main: braille.o main.o
-	$(CC) braille.o main.o -o main
+	$(CC) braille.o main.o -o braille
 
 main.o: main.cpp 
 	$(CC) -c main.cpp 
@@ -13,4 +13,4 @@ tidy:
 	rm *.o
 
 clean: 
-	rm main *.o
+	rm braille *.o
