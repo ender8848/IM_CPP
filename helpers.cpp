@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstring>
 #include <cctype>
+#include <string>
 using namespace std;
 
 /**
@@ -30,8 +31,15 @@ bool occurs_before(char const * const str, char letter, int pos);
    returns false. */
 bool get_word(const char *input_line, int number, char *output_word);
 
+/* helper func for my get word*/
+bool is_punct(char ch);
+
 /* count word num using get_word function */
 int count_words(char const * words);
+
+/* leading x in a string */
+int leading_x(char const * words, char target);
+
 
 
 int main() {
@@ -93,6 +101,10 @@ int main() {
     cout << count_words("Sometime too hot the eye of heaven shines,") << " words" << endl;
     cout << endl;
 
+    cout << "======== test for leading_x func ========" << endl;
+    cout << "000000fbkjsfs contains " << leading_x("000000fbkjsfs", '0') << " 0s" << endl;
+    cout << "666gsjkbdw contains " << leading_x("666gsjkbdw", '6') << " 6s" << endl;
+    cout << endl;
     return 0;
 }
 
@@ -104,7 +116,7 @@ int compare_whatever(char const * one, char const * two) {
     if (strlen(one) == 0 && strlen(two) == 0) {return 1;}
     if (strlen(one) == 0 || strlen(two) == 0) {return 0;}
     if (toupper(*one) == toupper(*two)) {
-        return compare(one + 1, two + 1);
+        return compare_whatever(one + 1, two + 1);
     }
     else {
         return 0;
@@ -130,35 +142,73 @@ bool occurs_before(char const * const str, char letter, int pos) {
 }
 
 
-bool get_word(const char *input_line, int word_number, char *output_word) {
-    char *output_start = output_word;
-    int words = 0;
+// bool get_word(const char *input_line, int word_number, char *output_word) {
+//     char *output_start = output_word;
+//     int words = 0;
 
-    if (word_number < 1) {
-        *output_word = '\0';
-        return false;
-    }
+//     if (word_number < 1) {
+//         *output_word = '\0';
+//         return false;
+//     }
   
-    do {
-        while (*input_line && !isalnum(*input_line)){input_line++;}
+//     do {
+//         while (*input_line && !isalnum(*input_line)){input_line++;}
 
-        if (*input_line == '\0') {break;}
+//         if (*input_line == '\0') {break;}
 
-        output_word = output_start;
-        while (*input_line && (isalnum(*input_line) || *input_line=='\'')) {
-            *output_word = toupper(*input_line);
-            output_word++;
-            input_line++;
+//         output_word = output_start;
+//         while (*input_line && (isalnum(*input_line) || *input_line=='\'')) {
+//             *output_word = toupper(*input_line);
+//             output_word++;
+//             input_line++;
+//         }
+//         *output_word = '\0';
+
+//         if (++words == word_number) {return true;}
+
+//     } while (*input_line);
+
+//     *output_start = '\0';
+//     return false;
+// }
+
+
+bool get_word(const char *input_line, int word_number, char *output_word) {
+    *output_word = '\0';
+    string word = "";
+    int count = 0;
+    for (size_t i = 0; i <= strlen(input_line); ++i) {
+        if (is_punct(input_line[i]) || input_line[i] == '\0') {
+            if (word.length() > 0) {
+                ++count;
+                if (word_number == count) {
+                    strcpy(output_word, word.c_str());
+                    return true;
+                }
+            }
+            word = "";
         }
-        *output_word = '\0';
-
-        if (++words == word_number) {return true;}
-
-    } while (*input_line);
-
-    *output_start = '\0';
+        else {word += input_line[i];}
+    }
     return false;
 }
+
+bool is_punct(char ch) {
+  switch(ch) {
+    case ' ': return true;
+    case ',': return true;
+    case '.': return true;
+    case '?': return true;
+    case '!': return true;
+    case ';': return true;
+    case ':': return true;
+    case '"': return true;
+    case '-': return true;
+    default : break;
+  }
+  return false;
+}
+
 
 
 int count_words(char const * words) {
@@ -166,4 +216,14 @@ int count_words(char const * words) {
     char output[64];
     while(get_word(words, ++count, output)) {}
     return count-1;
+}
+
+
+int leading_x(char const * word, char target) {
+    int num = 0;
+    for (size_t i = 0; i < strlen(word); ++i) {
+        if (word[i] != target) {break;}
+        ++num;
+    }
+    return num;
 }
