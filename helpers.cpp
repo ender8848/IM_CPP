@@ -31,7 +31,7 @@ bool occurs_before(char const * const str, char letter, int pos);
    returns false. */
 bool get_word(const char *input_line, int number, char *output_word);
 
-/* helper func for my get word*/
+/* helper func for my get word */
 bool is_punct(char ch);
 
 /* count word num using get_word function */
